@@ -1,0 +1,33 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: shivi4
+app: hedwig-sms-ms
+service: sms-ms
+
+provider:
+  name: aws
+  runtime: java17
+  timeout: 30
+  region: ap-south-1
+  stage: dev
+  
+  environment:
+    accessKey: abc
+    secretKey: abc
+    region: ap-south-1
+
+
+
+package:
+  artifact: target/AwsHttpTrial-0.0.1-SNAPSHOT.jar
+functions:
+  myTestLambda:
+    handler: com.aws.trial.HttpTrial::handleRequest
+    environment:
+      FUNCTION_NAME: smaple_function
+    events:
+      - http:
+          cors:
+            origin: '*'
+          path: /api/v1/sms-hero/sms
+          method: POST
+                 
