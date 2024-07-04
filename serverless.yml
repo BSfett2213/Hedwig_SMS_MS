@@ -14,20 +14,35 @@ provider:
     accessKey: abc
     secretKey: abc
     region: ap-south-1
+    DB_USR: postgres
+    DB_PSWD: root1234
+    DB_URL: jdbc:postgresql://hedwig-db-public.cdmie8q0wau3.ap-south-1.rds.amazonaws.com:5432/hedwig_sms_db
+
 
 
 
 package:
-  artifact: target/AwsHttpTrial-0.0.1-SNAPSHOT.jar
+  artifact: target/HedwigSMSMS-0.0.1-SNAPSHOT-aws.jar
 functions:
-  myTestLambda:
-    handler: com.aws.trial.HttpTrial::handleRequest
+  merchantHandler:
+    handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker
     environment:
-      FUNCTION_NAME: smaple_function
+      FUNCTION_NAME: merchantHandler
     events:
       - http:
           cors:
             origin: '*'
-          path: /api/v1/sms-hero/sms
-          method: POST
+          path: /api/v1/merchant
+          method: ANY
+  smsRequestHandler:
+    handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker
+    environment:
+      FUNCTION_NAME: smsRequestHandler
+    events:
+      - http:
+          cors:
+            origin: '*'
+          path: /api/v1/sms
+          method: ANY
+          
                  
